@@ -44,14 +44,22 @@ class Model:
         model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
         self.model = model
 
-    def train(self, batch_size, train_x, train_y):
+    def centralized_train(self, batch_size, train_x, train_y):
         batch_num = np.ceil(len(train_x) / batch_size)
-
         train_x, train_y = shuffle(train_x, train_y)
         batches = np.array_split(train_x, batch_num)
         labels = np.array_split(train_y, batch_num)
         for (x, y) in zip(batches, labels):
             self.model.train_on_batch(x, y)
+
+    def train_fedavg(self, batch_size, train_x, train_y, local_epochs):
+        batch_num = np.ceil(len(train_x) / batch_size)
+        for _ in range(local_epochs):
+            train_x, train_y = shuffle(train_x, train_y)
+            batches = np.array_split(train_x, batch_num)
+            labels = np.array_split(train_y, batch_num)
+            for (x, y) in zip(batches, labels):
+                self.model.train_on_batch(x, y)
 
     def evaluate(self, test_x, test_y):
         return self.model.evaluate(test_x, test_y)

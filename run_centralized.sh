@@ -1,0 +1,1 @@
+python simulate.py --approach centralized --dataset mnist --mode mlp --batch-size 128 --learning-rate 0.001 --loss categorical_crossentropy --optimizer sgd --epoch 10
